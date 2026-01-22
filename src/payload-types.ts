@@ -126,6 +126,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  role: 'admin' | 'editor';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -181,6 +182,9 @@ export interface Category {
 export interface Product {
   id: number;
   title: string;
+  /**
+   * Auto-generated from title if left empty. You can override it.
+   */
   slug: string;
   description?: string | null;
   price: number;
@@ -279,6 +283,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
