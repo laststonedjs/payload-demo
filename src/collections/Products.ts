@@ -1,3 +1,4 @@
+import { slugify } from '@/utils/slugify'
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {
@@ -5,6 +6,31 @@ export const Products: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'price', 'status', 'updatedAt'],
+  },
+  hooks: {
+    beforeValidate: [
+      ({ data }) => {
+        if (!data) return data
+
+        // auto slug (if not entered)
+        const title = typeof data.title === 'string' ? data.title : ''
+        const slug = typeof data.slug === 'string' ? data.slug : ''
+
+        if (!slug && title) {
+          data.slug = slugify(title)
+        }
+
+        // auto publishedAt
+        const status = data.status
+        const publishedAt = data.publishedAt
+
+        if (status === 'published' && !publishedAt) {
+          data.publishedAt = new Date().toISOString()
+        }
+
+        return data
+      },
+    ],
   },
   fields: [
     {
@@ -18,6 +44,10 @@ export const Products: CollectionConfig = {
       required: true,
       unique: true,
       index: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Auto-generated from title if left empty. You can override it.',
+      },
     },
     {
       name: 'description',
