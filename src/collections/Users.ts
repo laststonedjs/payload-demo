@@ -1,3 +1,4 @@
+import { isAdmin } from '@/access/isAdmin'
 import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -6,8 +7,25 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+  access: {
+    read: isAdmin,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
+  },
   fields: [
-    // Email added by default
-    // Add more fields as needed
+    {
+      name: 'role',
+      type: 'select',
+      required: true,
+      defaultValue: 'editor',
+      options: [
+        { label: 'Admin', value: 'admin' },
+        { label: 'Editor', value: 'editor' },
+      ],
+      admin: {
+        position: 'sidebar',
+      },
+    },
   ],
 }
