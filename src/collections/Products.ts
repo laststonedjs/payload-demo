@@ -12,20 +12,25 @@ export const Products: CollectionConfig = {
       ({ data }) => {
         if (!data) return data
 
-        // auto slug (if not entered)
-        const title = typeof data.title === 'string' ? data.title : ''
-        const slug = typeof data.slug === 'string' ? data.slug : ''
-
-        if (!slug && title) {
-          data.slug = slugify(title)
+        // price validation
+        if (typeof data.price === 'number' && data.price <= 0) {
+          throw new Error('Price must be greater than 0.')
         }
 
-        // auto publishedAt
-        const status = data.status
-        const publishedAt = data.publishedAt
+        // publish validation
+        if (data.status === 'published') {
+          if (!data.category) {
+            throw new Error('Cannot publish without category.')
+          }
 
-        if (status === 'published' && !publishedAt) {
-          data.publishedAt = new Date().toISOString()
+          if (!data.images || data.images.length === 0) {
+            throw new Error('Cannot publish without at least one image.')
+          }
+        }
+
+        // featured rule
+        if (data.featured && data.inStock === false) {
+          throw new Error('Out of stock products cannot be featured.')
         }
 
         return data
@@ -48,6 +53,11 @@ export const Products: CollectionConfig = {
         position: 'sidebar',
         description: 'Auto-generated from title if left empty. You can override it.',
       },
+    },
+    {
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
     },
     {
       name: 'description',
