@@ -1,3 +1,4 @@
+import { isAdminField } from '@/access/isAdminField'
 import { slugify } from '@/utils/slugify'
 import type { CollectionConfig } from 'payload'
 
@@ -58,6 +59,10 @@ export const Products: CollectionConfig = {
       name: 'featured',
       type: 'checkbox',
       defaultValue: false,
+      access: {
+        create: isAdminField,
+        update: isAdminField,
+      },
     },
     {
       name: 'description',
@@ -68,6 +73,10 @@ export const Products: CollectionConfig = {
       type: 'number',
       required: true,
       min: 0,
+      access: {
+        create: isAdminField,
+        update: isAdminField,
+      },
     },
     {
       name: 'inStock',
@@ -102,6 +111,9 @@ export const Products: CollectionConfig = {
       admin: {
         readOnly: true,
         position: 'sidebar',
+      },
+      access: {
+        update: () => false,
       },
     },
   ],
