@@ -185,6 +185,7 @@ export interface Product {
    * Auto-generated from title if left empty. You can override it.
    */
   slug: string;
+  featured?: boolean | null;
   description?: string | null;
   price: number;
   inStock?: boolean | null;
@@ -335,6 +336,7 @@ export interface CategoriesSelect<T extends boolean = true> {
 export interface ProductsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
+  featured?: T;
   description?: T;
   price?: T;
   inStock?: T;
